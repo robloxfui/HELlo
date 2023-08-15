@@ -2768,68 +2768,6 @@ local function getDragIt()
             end
         )()
 
-        drag.Drag = function(Gui, setTo, Boundary, Clippings, AutoClip, ResponseTime, Snappings)
-            local self = {}
-            self.Boundary = Boundary
-            self.Object = Gui
-            self.Clippings = Clippings
-            self.CanDrag = false
-            self.OldPosition = nil
-            self.Clipped = nil
-            self.AutoClip = AutoClip
-            self.ResponseTime = (ResponseTime and math.abs(ResponseTime))
-            self.Snappings = Snappings
-            self.Snapped = nil
-
-            self._InputCheck =
-                setTo.InputBegan:Connect(
-                function(Input)
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        local CanSet = false
-                        for _, v in ipairs(Objects) do
-                            if v.CanDrag then
-                                CanSet = true
-                                break
-                            end
-                        end
-
-                        local Event = Events[self]
-
-                        if not CanSet then
-                            self.CanDrag = true
-                            Event[1]:Fire()
-
-                            local Connection
-                            Connection =
-                                Input.Changed:Connect(
-                                function()
-                                    if Input.UserInputState == Enum.UserInputState.End then
-                                        self.CanDrag = false
-                                        Event[2]:Fire()
-                                        Connection:Disconnect()
-                                    end
-                                end
-                            )
-                        end
-                    end
-                end
-            )
-
-            local DragStart = Instance.new("BindableEvent")
-            local DragEnd = Instance.new("BindableEvent")
-
-            self.DragStart = DragStart.Event
-            self.DragEnd = DragEnd.Event
-
-            Events[self] = {DragStart, DragEnd}
-
-            setmetatable(self, GuiObject)
-
-            table.insert(Objects, self)
-
-            return self
-        end
-
         drag.InputBegan =
             UIS.InputBegan:Connect(
             function(Input, gp)
@@ -3322,7 +3260,7 @@ function UILibrary.new(gameName, userId, rank)
     MakeDraggable(Frame, window.MainUI)
 
     --// Customize the GUI
-    window.Watermark.Text = ("hydrahub v2 | %s | %s"):format(userId, gameName)
+    window.Watermark.Text = ("Quarterly Hub | %s | %s"):format(userId, gameName)
     local userinfo = window.MainUI.Sidebar.ContentHolder.UserInfo.Content
     userinfo.Rank.Text = rank
     userinfo.Title.Text = userId
